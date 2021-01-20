@@ -1,5 +1,5 @@
 {
-  "version": "0.1.0",
+  "version": "0.1.4",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -23,6 +23,9 @@
   },
   "peerDependencies": {
     "react": ">=16"
+  },
+  "repository": {
+    "url": "https://github.com/dusanjovanov/formy"
   },
   "prettier": {
     "printWidth": 80,

@@ -2,7 +2,7 @@
 
 ![Formy](https://github.com/dusanjovanov/formy/blob/master/logo_small.png 'Formy')
 
-[![npm](https://badge.fury.io/js/%40formx%2Fformx.svg)](https://www.npmjs.com/package/@formx/formy)
+[![npm](https://badge.fury.io/js/%40formx%2Fformy.svg)](https://www.npmjs.com/package/@formx/formy)
 
 ## Install
 
@@ -13,12 +13,12 @@ npm i @formx/formy
 ## Create your form class
 
 ```ts
-import { IForm } from '@formx/formy';
+import { IForm, Field } from '@formx/formy';
 
 class PersonForm implements IForm {
-  firstName = field(TextField);
-  lastName = field(TextField);
-  fullName = field(TextField);
+  firstName = Field(TextField);
+  lastName = Field(TextField);
+  fullName = Field(TextField);
 
   init = (context) => {
     this.firstName.value = context.person?.firstName ?? '';
@@ -157,4 +157,3 @@ We're using the Form component and we're passing it 4 things:
 - `onSubmit` - Function that will be called when you submit if all fields are valid. It will be called with values and transformed values.
 - `context` - External dependencies. In this case, it's a person object that we get from the server.
 - `ref`- Ref to the Form component. We use this to reset the form from the outside when the person object arrives from the server.
-
