@@ -1,0 +1,8 @@
+{
+  "docs": {
+    "General": ["overview", "quickstart"]
+  },
+  "docs-other": {
+    "API": ["form", "field"]
+  }
+}

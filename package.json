@@ -30,7 +30,7 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "name": "formy",
+  "name": "@formx/formy",
   "author": "Dusan Jovanov",
   "module": "dist/formy.esm.js",
   "size-limit": [
