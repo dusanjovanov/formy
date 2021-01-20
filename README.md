@@ -1,6 +1,6 @@
 # Formy
 
-![Formy](https://github.com/dusanjovanov/formy/blob/master/logo.png 'Formy')
+![Formy](https://github.com/dusanjovanov/formy/blob/master/logo_small.png 'Formy')
 
 ## Install
 
