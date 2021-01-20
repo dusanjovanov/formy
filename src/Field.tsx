@@ -2,7 +2,13 @@ import { createRef } from 'react';
 import { FieldComponent } from './FieldComponent';
 import React from 'react';
 import { Form } from './Form';
-import { Error, IndexObject, UpdateType, ValidateFn } from './types';
+import {
+  Error,
+  IndexObject,
+  TransformFn,
+  UpdateType,
+  ValidateFn,
+} from './types';
 import * as yup from 'yup';
 import { isFunction, isPromise } from './utils';
 
@@ -33,9 +39,7 @@ export class Field {
   set error(error: Error) {
     this.prevError = this.error;
     this._error = error;
-    if (this.prevError !== this.error) {
-      this.updateFieldState({ error: this.error }, 'error');
-    }
+    this.updateFieldState({ error: this.error }, 'error');
   }
   _props: IndexObject = {};
   get props() {
@@ -62,6 +66,7 @@ export class Field {
     return this._validate;
   }
   set validate(validate: ValidateFn | undefined) {
+    if (!validate) return;
     this._validate = validate;
   }
 
@@ -114,6 +119,8 @@ export class Field {
   };
 
   focusRef = createRef<any>();
+
+  transform?: TransformFn;
 
   render = () => {
     return <FieldComponent ref={this.fieldRef} field={this} />;

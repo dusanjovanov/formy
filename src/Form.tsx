@@ -1,6 +1,14 @@
 import { Component, createContext, Fragment, ReactNode } from 'react';
 import { Field } from './Field';
-import { IndexObject, UpdateType } from './types';
+import {
+  API,
+  Error,
+  FormProp,
+  GetFieldsStackFilterFn,
+  IndexObject,
+  SubscribeCallback,
+  UpdateType,
+} from './types';
 import React from 'react';
 import { isFunction } from './utils';
 
@@ -11,23 +19,13 @@ type Props = {
   context: IndexObject;
 };
 
-type GetFieldsStackFilterFn = (name: string) => boolean;
-
-type API = {
-  fields: IndexObject<ReactNode>;
-  getFieldsStack: (filter?: GetFieldsStackFilterFn) => ReactNode[];
-  submitForm: () => void;
-  resetForm: () => void;
-  focusField: (name: string) => void;
-};
-
 export const FormContext = createContext<API>({} as API);
 
 export class Form extends Component<Props> {
   constructor(props: Props) {
     super(props);
     this.form = new this.props.form(this);
-    this.renderedFields = this.createRenderedFields() as any;
+    this.renderedFields = this.createRenderedFields();
     this.initFields();
   }
   form: any;
@@ -51,7 +49,7 @@ export class Form extends Component<Props> {
       [key: string]: ReactNode;
     } = {};
     for (const [name, field] of this.getFieldsEntries()) {
-      renderedFields[name] = (field as Field).render();
+      renderedFields[name] = field.render();
     }
     return renderedFields;
   };
@@ -64,20 +62,59 @@ export class Form extends Component<Props> {
     return values;
   };
 
+  getPreviousValues = () => {
+    const previousValues: { [key: string]: any } = {};
+    for (const [name, field] of this.getFieldsEntries()) {
+      previousValues[name] = field.prevValue;
+    }
+    return previousValues;
+  };
+
   getErrors = () => {
-    const errors = 
-    return Object.entries(this.fieldRefs).reduce<IndexObject<Error>>(
-      (errors, [name, r]) => {
-        if (!r.current) return errors;
-        errors[name] = r.current.getError();
-        return errors;
-      },
-      {}
-    );
+    const errors: IndexObject<Error> = {};
+    for (const [name, field] of this.getFieldsEntries()) {
+      if (field.error === undefined) continue;
+      errors[name] = field.error;
+    }
+    return errors;
+  };
+
+  getPreviousErrors = () => {
+    const previousErrors: { [key: string]: any } = {};
+    for (const [name, field] of this.getFieldsEntries()) {
+      if (field.prevError === undefined) continue;
+      previousErrors[name] = field.prevError;
+    }
+    return previousErrors;
+  };
+
+  getTransformedValues = () => {
+    const transformedValues: { [key: string]: any } = {};
+    for (const [name, field] of this.getFieldsEntries()) {
+      if (field.transform && isFunction(field.transform)) {
+        transformedValues[name] = field.transform(field.value);
+      } else {
+        transformedValues[name] = field.value;
+      }
+    }
+    return transformedValues;
+  };
+
+  validateAllFields = () => {
+    this.getFieldsEntries().forEach(([_, field]) => {
+      field.validateField();
+    });
+  };
+
+  isValid = () => {
+    return JSON.stringify(this.getErrors()) === JSON.stringify({});
   };
 
   submitForm = () => {
-    this.props.onSubmit(this.getValues(), this.getValues());
+    this.validateAllFields();
+    if (this.isValid()) {
+      this.props.onSubmit(this.getValues(), this.getTransformedValues());
+    }
   };
 
   resetForm = () => {
@@ -88,8 +125,13 @@ export class Form extends Component<Props> {
     this.form.init(this.props.context);
   }
 
-  createFormProp = () => {
-    return { values: this.getValues() };
+  createFormProp = (): FormProp => {
+    return {
+      values: this.getValues(),
+      errors: this.getErrors(),
+      previousValues: this.getPreviousValues(),
+      previousErrors: this.getPreviousErrors(),
+    };
   };
 
   createReason = (name: string, updateType: UpdateType) => ({
@@ -105,13 +147,17 @@ export class Form extends Component<Props> {
     );
   };
 
-  createFormAPI = () => {
+  createFormAPI = (): API => {
     return {
       fields: this.renderedFields,
       submitForm: this.submitForm,
       focusField: this.focusField,
       getFieldsStack: this.getFieldsStack,
       resetForm: this.resetForm,
+      subscribe: this.subscribe,
+      getValues: this.getValues,
+      getErrors: this.getErrors,
+      getIsValid: this.isValid,
     };
   };
 
@@ -128,7 +174,17 @@ export class Form extends Component<Props> {
       });
   };
 
-  focusField = (name: string) => {};
+  focusField = (name: string) => {
+    const field = this.form[name];
+    if (!field) return;
+    field.focusField();
+  };
+
+  subscribers: SubscribeCallback[] = [];
+
+  subscribe = (cb: SubscribeCallback) => {
+    this.subscribers.push(cb);
+  };
 
   render() {
     return (

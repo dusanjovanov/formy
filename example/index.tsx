@@ -6,20 +6,53 @@ import * as yup from 'yup';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { useRef } from 'react';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
-const TextField = ({ label, isDisabled, field }) => {
+const TextField = ({ label, isVisible, field, background }) => {
+  if (typeof isVisible === 'boolean' && !isVisible) return null;
+
   return (
-    <div>
+    <div style={{ background }}>
       <h2>{label}</h2>
       <input
         type="text"
+        {...field}
         value={field.value ?? ''}
         onChange={(e) => field.onChange(e.target.value)}
-        onBlur={field.onBlur}
-        disabled={isDisabled}
         ref={field.focusRef}
       />
       {field.error}
+    </div>
+  );
+};
+
+const DateField = ({ label, field }) => {
+  return (
+    <div>
+      <h2>{label}</h2>
+      <DatePicker
+        selected={field.value}
+        onChange={field.onChange}
+        onBlur={field.onBlur}
+        ref={field.focusRef}
+      />
+      {field.error}
+    </div>
+  );
+};
+
+const CheckboxField = ({ label, field, background }) => {
+  return (
+    <div style={{ background }}>
+      <h2>{label}</h2>
+      <input
+        type="checkbox"
+        onChange={(e) => field.onChange(e.target.checked)}
+        onBlur={field.onBlur}
+        checked={field.value ?? false}
+        ref={field.focusRef}
+      />
     </div>
   );
 };
@@ -28,20 +61,21 @@ class PersonForm {
   firstName = field(TextField);
   lastName = field(TextField);
   fullName = field(TextField);
+  dateOfBirth = field(DateField);
+  isEmployed = field(CheckboxField);
+  companyName = field(TextField);
 
   init = ({ person }) => {
     this.firstName.value = person?.firstName ?? '';
     this.lastName.value = person?.lastName ?? '';
+    this.dateOfBirth.value = person ? new Date(person.dateOfBirth) : null;
+    this.isEmployed.value = false;
     this.fullName.value = person
       ? `${person.firstName} ${person.lastName}`
       : '';
     this.firstName.schema = yup.string().required();
-    this.lastName.schema = yup.string().required();
-    // this.lastName.validate = (value) => {
-    //   if (typeof value !== 'string' || value.length === 0) {
-    //     return 'Required';
-    //   }
-    // };
+    this.dateOfBirth.transform = (value) =>
+      value ? value.toISOString() : null;
   };
 
   update = (context, form, reason) => {
@@ -54,6 +88,15 @@ class PersonForm {
     this.fullName.props = {
       label: 'Full name',
       isDisabled: true,
+    };
+    this.dateOfBirth.props = {
+      label: 'Date of birth',
+    };
+    this.isEmployed.props = {
+      label: 'Is employed',
+    };
+    this.companyName.props = {
+      label: 'Company name',
     };
     this.calculateFullName(reason);
   };
@@ -75,6 +118,9 @@ const getPerson = async () => {
   return {
     firstName: 'Dusan',
     lastName: 'Jovanov',
+    dateOfBirth: new Date().toISOString(),
+    isEmployed: false,
+    companyName: null,
   };
 };
 
@@ -96,8 +142,8 @@ const App = () => {
     }
   }, [person]);
 
-  const onSubmit = (values) => {
-    console.log(values);
+  const onSubmit = (values, transformedValues) => {
+    console.log(values, transformedValues);
   };
 
   const context = {
@@ -115,11 +161,14 @@ const App = () => {
         {({ fields, submitForm, getFieldsStack, resetForm, focusField }) => {
           return (
             <>
-              {fields.firstName}
-              {fields.lastName}
-              {fields.fullName}
+              {getFieldsStack()}
+              <br />
+              <br />
               <button onClick={() => submitForm()}>Submit</button>
               <button onClick={() => resetForm()}>Reset</button>
+              <button onClick={() => focusField('lastName')}>
+                Focus field
+              </button>
             </>
           );
         }}
