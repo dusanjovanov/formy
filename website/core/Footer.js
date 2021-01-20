@@ -16,7 +16,11 @@ class Footer extends React.Component {
   }
 
   render() {
-    return null;
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        Copyright@{new Date().getFullYear()} Formx - Dusan Jovanov
+      </div>
+    );
   }
 }
 
