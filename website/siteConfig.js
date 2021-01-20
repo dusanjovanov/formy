@@ -55,7 +55,7 @@ const siteConfig = {
     primaryColor: '#055205',
     secondaryColor: '#055205',
   },
-  usePrism: ['jsx'],
+  usePrism: ['tsx', 'ts'],
 
   /* Custom fonts for website */
   /*

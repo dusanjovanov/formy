@@ -9,7 +9,9 @@ Formy is a React form library with a very simple API where you put all your form
 This is what it looks like:
 
 ```ts
-class PersonForm {
+import { IForm } from '@formx/formy';
+
+class PersonForm implements IForm {
   firstName = field(TextField);
   lastName = field(TextField);
   fullName = field(TextField);

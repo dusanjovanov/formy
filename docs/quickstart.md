@@ -13,7 +13,9 @@ npm i @formx/formy
 ## Create your form class
 
 ```ts
-class PersonForm {
+import { IForm } from '@formx/formy';
+
+class PersonForm implements IForm {
   firstName = field(TextField);
   lastName = field(TextField);
   fullName = field(TextField);

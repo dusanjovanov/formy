@@ -1,7 +1,7 @@
 import * as React from 'react';
 import 'react-app-polyfill/ie11';
 import * as ReactDOM from 'react-dom';
-import { field, Form, UpdateReason } from '../.';
+import { Field, Form, IForm, UpdateReason } from '../.';
 import * as yup from 'yup';
 import { useState } from 'react';
 import { useEffect } from 'react';
@@ -57,13 +57,13 @@ const CheckboxField = ({ label, field, background }) => {
   );
 };
 
-class PersonForm {
-  firstName = field(TextField);
-  lastName = field(TextField);
-  fullName = field(TextField);
-  dateOfBirth = field(DateField);
-  isEmployed = field(CheckboxField);
-  companyName = field(TextField);
+class PersonForm implements IForm {
+  firstName = Field(TextField);
+  lastName = Field(TextField);
+  fullName = Field(TextField);
+  dateOfBirth = Field(DateField);
+  isEmployed = Field(CheckboxField);
+  companyName = Field(TextField);
 
   init = ({ person }) => {
     this.firstName.value = person?.firstName ?? '';

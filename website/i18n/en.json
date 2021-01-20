@@ -5,13 +5,17 @@
     "previous": "Previous",
     "tagline": "Fast React form library",
     "docs": {
-      "api": {
-        "title": "API",
-        "sidebar_label": "API"
+      "field": {
+        "title": "Field",
+        "sidebar_label": "Field"
       },
       "form": {
         "title": "Form",
         "sidebar_label": "Form"
+      },
+      "iform": {
+        "title": "IForm",
+        "sidebar_label": "IForm"
       },
       "overview": {
         "title": "Overview",
@@ -20,6 +24,10 @@
       "quickstart": {
         "title": "Quickstart",
         "sidebar_label": "Quickstart"
+      },
+      "useformcontext": {
+        "title": "useFormContext",
+        "sidebar_label": "useFormContext"
       }
     },
     "links": {

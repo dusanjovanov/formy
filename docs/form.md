@@ -23,3 +23,32 @@ These are your external dependencies. Could be:
 ### `onSubmit: (values: {[key:string]: any}, transformedValues: {[key:string]: any}) => void`
 
 This gets called when you submit the form, and all fields are valid (i.e. the `errors` state is an empty object)
+
+## Return props
+
+Things you get in function as prop (`children` function) and through `useFormContext`.
+
+### `fields: {[name: string]: ReactNode}`
+
+This is an object that contains all your fields already rendered for you to place at your will. This is done so you can have whatever form layout you want.
+
+### `submitForm: () => void`
+
+Function to trigger submit.
+
+### `resetForm: () => void`
+
+Function to trigger reset. When you call this function, the init method from your class will be called.
+
+### `getFieldsStack: (filter?: (name: string) => boolean) => ReactNode[]`
+
+Function to get an array of rendered fields so you don't have to place every field individually.
+You get a filter function if you want to place some fields differently.
+
+### `getValues: () => {[key: string]: any}`
+
+### `getErrors: () => {[key: string]: string}`
+
+### `getIsValid: () => boolean`
+
+Get if form is valid (i.e. the errors object is empty)

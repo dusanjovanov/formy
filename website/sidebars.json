@@ -3,6 +3,6 @@
     "General": ["overview", "quickstart"]
   },
   "docs-other": {
-    "API": ["form", "field"]
+    "API": ["form", "field", "iform", "useformcontext"]
   }
 }
