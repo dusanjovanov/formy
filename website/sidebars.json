@@ -3,6 +3,14 @@
     "General": ["overview", "quickstart"]
   },
   "docs-other": {
-    "API": ["form", "field", "iform", "useformcontext"]
+    "API": [
+      "form",
+      "field",
+      "iform",
+      "useformcontext",
+      "useSubscribe",
+      "formProp",
+      "updateReason"
+    ]
   }
 }

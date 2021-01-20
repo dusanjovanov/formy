@@ -13,6 +13,10 @@
         "title": "Form",
         "sidebar_label": "Form"
       },
+      "formProp": {
+        "title": "FormProp",
+        "sidebar_label": "FormProp"
+      },
       "iform": {
         "title": "IForm",
         "sidebar_label": "IForm"
@@ -25,9 +29,17 @@
         "title": "Quickstart",
         "sidebar_label": "Quickstart"
       },
+      "updateReason": {
+        "title": "UpdateReason",
+        "sidebar_label": "UpdateReason"
+      },
       "useformcontext": {
         "title": "useFormContext",
         "sidebar_label": "useFormContext"
+      },
+      "useSubscribe": {
+        "title": "useSubscribe",
+        "sidebar_label": "useSubscribe"
       }
     },
     "links": {

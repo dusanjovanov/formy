@@ -52,3 +52,11 @@ You get a filter function if you want to place some fields differently.
 ### `getIsValid: () => boolean`
 
 Get if form is valid (i.e. the errors object is empty)
+
+### `subscribe: (cb: (form: FormProp, reason: UpdateReason) => void) => void;`
+
+You can subscribe outside of the form to every change (value, error, context)
+
+### `focusField: (name: string) => void;`
+
+Fmperatively focus a field. This depends on `focusRef` being passed to something with a `focus` method in your component.
