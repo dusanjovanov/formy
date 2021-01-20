@@ -9,7 +9,7 @@ export type UpdateReason = {
   type: UpdateType;
 };
 
-export type UpdateType = 'value' | 'error' | 'props';
+export type UpdateType = 'value' | 'error' | 'props' | 'context';
 
 export type Error = string | undefined;
 

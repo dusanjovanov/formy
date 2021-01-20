@@ -11,6 +11,7 @@ import {
 } from './types';
 import React from 'react';
 import { isFunction } from './utils';
+import { IForm } from '.';
 
 type Props = {
   children: (args: API) => any;
@@ -28,8 +29,18 @@ export class Form extends Component<Props> {
     this.renderedFields = this.createRenderedFields();
     this.initFields();
   }
-  form: any;
+  form: IForm;
   renderedFields: IndexObject<ReactNode>;
+
+  componentDidUpdate(prevProps: Props) {
+    if (prevProps.context !== this.props.context) {
+      this.form.update(
+        this.props.context,
+        this.createFormProp(),
+        this.createReason('context', 'context')
+      );
+    }
+  }
 
   initFields = () => {
     this.getFieldsEntries().forEach(([name, field]) => {
@@ -145,6 +156,7 @@ export class Form extends Component<Props> {
       this.createFormProp(),
       this.createReason(name, updateType)
     );
+    this.subscribers.forEach((s) => s(this.createFormProp()));
   };
 
   createFormAPI = (): API => {

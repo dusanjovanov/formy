@@ -17,9 +17,9 @@ const TextField = ({ label, isVisible, field, background }) => {
       <h2>{label}</h2>
       <input
         type="text"
-        {...field}
         value={field.value ?? ''}
         onChange={(e) => field.onChange(e.target.value)}
+        onBlur={field.onBlur}
         ref={field.focusRef}
       />
       {field.error}
