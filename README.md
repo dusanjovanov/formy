@@ -2,4 +2,4 @@
 
 ## Fast React form library
 
-![Formy](https://github.com/adam-p/markdown-here/raw/master/src/common/images/icon48.png 'Formy')
+![Formy](https://github.com/dusanjovanov/formy/blob/master/logo.png 'Formy')
