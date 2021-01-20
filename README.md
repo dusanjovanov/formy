@@ -2,8 +2,6 @@
 
 ![Formy](https://github.com/dusanjovanov/formy/blob/master/logo.png 'Formy')
 
-## Quickstart
-
 ## Install
 
 ```bash
