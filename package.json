@@ -1,5 +1,5 @@
 {
-  "version": "0.1.5",
+  "version": "0.1.7",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -21,12 +21,17 @@
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },
+  "keywords": [
+    "react",
+    "form"
+  ],
   "peerDependencies": {
     "react": ">=16"
   },
   "repository": {
     "url": "https://github.com/dusanjovanov/formy"
   },
+  "homepage": "https://formx-formy.netlify.app",
   "prettier": {
     "printWidth": 80,
     "semi": true,
