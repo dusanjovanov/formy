@@ -10,3 +10,5 @@ export type UpdateReason = {
 export type UpdateType = 'value' | 'error' | 'props';
 
 export type Error = string | undefined;
+
+export type ValidateFn = (value: any) => undefined | string | Promise<any>;

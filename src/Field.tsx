@@ -2,14 +2,15 @@ import { createRef } from 'react';
 import { FieldComponent } from './FieldComponent';
 import React from 'react';
 import { Form } from './Form';
-import { Error, IndexObject, UpdateType } from './types';
+import { Error, IndexObject, UpdateType, ValidateFn } from './types';
 import * as yup from 'yup';
+import { isFunction, isPromise } from './utils';
 
 export class Field {
-  constructor(component: any, defaultValue?: any) {
+  constructor(component: any) {
     this.component = component;
-    this.defaultValue = defaultValue;
   }
+  form?: Form;
   name: string = '';
   fieldRef = createRef<FieldComponent>();
   component: any;
@@ -56,6 +57,14 @@ export class Field {
     this._schema = schema;
   }
 
+  _validate: ValidateFn | undefined;
+  get validate() {
+    return this._validate;
+  }
+  set validate(validate: ValidateFn | undefined) {
+    this._validate = validate;
+  }
+
   validateField = () => {
     if (this.schema) {
       this.schema
@@ -66,6 +75,19 @@ export class Field {
         .catch((err) => {
           this.error = err.errors[0];
         });
+    } else if (this.validate) {
+      if (isFunction(this.validate)) {
+        const result = this.validate(this.value);
+        if (isPromise(result)) {
+          result
+            .then((err) => (this.error = err))
+            .catch((err) => console.log(err));
+        }
+        //
+        else {
+          this.error = result;
+        }
+      }
     }
   };
 
@@ -77,9 +99,6 @@ export class Field {
     });
   };
 
-  defaultValue: any;
-  form?: Form;
-
   onChange = (value: any) => {
     this.value = value;
   };
@@ -87,6 +106,14 @@ export class Field {
   onBlur = () => {
     this.validateField();
   };
+
+  focusField = () => {
+    if (!this.focusRef.current) return;
+    if (!isFunction(this.focusRef.current.focus)) return;
+    this.focusRef.current.focus();
+  };
+
+  focusRef = createRef<any>();
 
   render = () => {
     return <FieldComponent ref={this.fieldRef} field={this} />;

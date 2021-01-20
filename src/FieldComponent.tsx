@@ -12,7 +12,7 @@ export class FieldComponent extends Component<
   constructor(props: Props) {
     super(props);
     this.state = {
-      value: this.props.field.defaultValue,
+      value: undefined,
       error: undefined,
     };
   }
@@ -30,6 +30,7 @@ export class FieldComponent extends Component<
           error: this.state.error,
           onChange: this.props.field.onChange,
           onBlur: this.props.field.onBlur,
+          focusRef: this.props.field.focusRef,
         }}
       />
     );

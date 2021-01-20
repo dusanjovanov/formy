@@ -1,13 +1,27 @@
-import { Component } from 'react';
+import { Component, createContext, Fragment, ReactNode } from 'react';
 import { Field } from './Field';
-import { UpdateType } from './types';
+import { IndexObject, UpdateType } from './types';
+import React from 'react';
+import { isFunction } from './utils';
 
 type Props = {
-  children: any;
+  children: (args: API) => any;
   form: any;
-  onSubmit: (values: any) => any;
-  context: any;
+  onSubmit: (values: IndexObject, transformedValue: IndexObject) => any;
+  context: IndexObject;
 };
+
+type GetFieldsStackFilterFn = (name: string) => boolean;
+
+type API = {
+  fields: IndexObject<ReactNode>;
+  getFieldsStack: (filter?: GetFieldsStackFilterFn) => ReactNode[];
+  submitForm: () => void;
+  resetForm: () => void;
+  focusField: (name: string) => void;
+};
+
+export const FormContext = createContext<API>({} as API);
 
 export class Form extends Component<Props> {
   constructor(props: Props) {
@@ -17,9 +31,7 @@ export class Form extends Component<Props> {
     this.initFields();
   }
   form: any;
-  renderedFields: {
-    [key: string]: JSX.Element;
-  };
+  renderedFields: IndexObject<ReactNode>;
 
   initFields = () => {
     this.getFieldsEntries().forEach(([name, field]) => {
@@ -36,7 +48,7 @@ export class Form extends Component<Props> {
 
   createRenderedFields = () => {
     const renderedFields: {
-      [key: string]: JSX.Element;
+      [key: string]: ReactNode;
     } = {};
     for (const [name, field] of this.getFieldsEntries()) {
       renderedFields[name] = (field as Field).render();
@@ -52,8 +64,24 @@ export class Form extends Component<Props> {
     return values;
   };
 
+  getErrors = () => {
+    const errors = 
+    return Object.entries(this.fieldRefs).reduce<IndexObject<Error>>(
+      (errors, [name, r]) => {
+        if (!r.current) return errors;
+        errors[name] = r.current.getError();
+        return errors;
+      },
+      {}
+    );
+  };
+
   submitForm = () => {
-    this.props.onSubmit(this.getValues());
+    this.props.onSubmit(this.getValues(), this.getValues());
+  };
+
+  resetForm = () => {
+    this.form.init(this.props.context);
   };
 
   componentDidMount() {
@@ -77,10 +105,36 @@ export class Form extends Component<Props> {
     );
   };
 
-  render() {
-    return this.props.children({
+  createFormAPI = () => {
+    return {
       fields: this.renderedFields,
       submitForm: this.submitForm,
-    });
+      focusField: this.focusField,
+      getFieldsStack: this.getFieldsStack,
+      resetForm: this.resetForm,
+    };
+  };
+
+  getFieldsStack = (filter?: GetFieldsStackFilterFn) => {
+    return this.getFieldsEntries()
+      .filter(([name]) => {
+        if (filter && isFunction(filter)) {
+          return filter(name);
+        }
+        return true;
+      })
+      .map(([name]) => {
+        return <Fragment key={name}>{this.renderedFields[name]}</Fragment>;
+      });
+  };
+
+  focusField = (name: string) => {};
+
+  render() {
+    return (
+      <FormContext.Provider value={this.createFormAPI()}>
+        {this.props.children(this.createFormAPI())}
+      </FormContext.Provider>
+    );
   }
 }
