@@ -16,7 +16,11 @@ import { IForm } from '.';
 type Props = {
   children: (args: API) => any;
   form: any;
-  onSubmit: (values: IndexObject, transformedValue: IndexObject) => any;
+  onSubmit: (
+    values: IndexObject,
+    transformedValue: IndexObject,
+    args?: IndexObject
+  ) => any;
   context: IndexObject;
 };
 
@@ -111,20 +115,22 @@ export class Form extends Component<Props> {
     return transformedValues;
   };
 
-  validateAllFields = () => {
-    this.getFieldsEntries().forEach(([_, field]) => {
-      field.validateField();
-    });
+  validateAllFields = async () => {
+    return Promise.all(
+      this.getFieldsEntries().map(([_, field]) => {
+        return field.validateField();
+      })
+    );
   };
 
   isValid = () => {
     return JSON.stringify(this.getErrors()) === JSON.stringify({});
   };
 
-  submitForm = () => {
-    this.validateAllFields();
+  submitForm = async (args?: IndexObject) => {
+    await this.validateAllFields();
     if (this.isValid()) {
-      this.props.onSubmit(this.getValues(), this.getTransformedValues());
+      this.props.onSubmit(this.getValues(), this.getTransformedValues(), args);
     }
   };
 
@@ -134,6 +140,11 @@ export class Form extends Component<Props> {
 
   componentDidMount() {
     this.form.init(this.props.context);
+    this.form.update(
+      this.props.context,
+      this.createFormProp(),
+      this.createReason('mount', 'mount')
+    );
   }
 
   createFormProp = (): FormProp => {
@@ -143,6 +154,17 @@ export class Form extends Component<Props> {
       previousValues: this.getPreviousValues(),
       previousErrors: this.getPreviousErrors(),
     };
+  };
+
+  getField = (name: string) => {
+    const entry = this.getFieldsEntries().find(([n]) => n === name);
+    return entry?.[1];
+  };
+
+  setValue = (name: string, value: any) => {
+    const field = this.getField(name);
+    if (!field) return;
+    field.value = value;
   };
 
   createReason = (name: string, updateType: UpdateType) => ({
@@ -170,14 +192,15 @@ export class Form extends Component<Props> {
       getValues: this.getValues,
       getErrors: this.getErrors,
       getIsValid: this.isValid,
+      setValue: this.setValue,
     };
   };
 
   getFieldsStack = (filter?: GetFieldsStackFilterFn) => {
     return this.getFieldsEntries()
-      .filter(([name]) => {
+      .filter(([_, field]) => {
         if (filter && isFunction(filter)) {
-          return filter(name);
+          return filter(field);
         }
         return true;
       })

@@ -1,6 +1,5 @@
-import { createRef } from 'react';
+import React, { createRef } from 'react';
 import { FieldComponent } from './FieldComponent';
-import React from 'react';
 import { Form } from './Form';
 import {
   Error,
@@ -9,8 +8,7 @@ import {
   UpdateType,
   ValidateFn,
 } from './types';
-import * as yup from 'yup';
-import { isFunction, isPromise } from './utils';
+import { isFunction } from './utils';
 
 export class Field {
   constructor(component: any) {
@@ -52,11 +50,11 @@ export class Field {
       this.updateFieldState({ ...this.props }, 'props');
     }
   }
-  _schema: yup.AnySchema | undefined;
+  _schema: any | undefined;
   get schema() {
     return this._schema;
   }
-  set schema(schema: yup.AnySchema | undefined) {
+  set schema(schema: any | undefined) {
     if (!schema) return;
     this._schema = schema;
   }
@@ -70,28 +68,18 @@ export class Field {
     this._validate = validate;
   }
 
-  validateField = () => {
+  validateField = async () => {
     if (this.schema) {
-      this.schema
-        .validate(this.value)
-        .then(() => {
-          this.error = undefined;
-        })
-        .catch((err) => {
-          this.error = err.errors[0];
-        });
+      try {
+        await this.schema.validate(this.value);
+        this.error = undefined;
+      } catch (err) {
+        this.error = err.errors[0];
+      }
     } else if (this.validate) {
       if (isFunction(this.validate)) {
-        const result = this.validate(this.value);
-        if (isPromise(result)) {
-          result
-            .then((err) => (this.error = err))
-            .catch((err) => console.log(err));
-        }
-        //
-        else {
-          this.error = result;
-        }
+        const result = await this.validate(this.value);
+        this.error = result;
       }
     }
   };

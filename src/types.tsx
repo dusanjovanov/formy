@@ -1,4 +1,5 @@
 import { ReactNode } from 'react';
+import { Field } from './Field';
 
 export type IndexObject<T = any> = {
   [key: string]: T;
@@ -9,7 +10,7 @@ export type UpdateReason = {
   type: UpdateType;
 };
 
-export type UpdateType = 'value' | 'error' | 'props' | 'context';
+export type UpdateType = 'value' | 'error' | 'props' | 'context' | 'mount';
 
 export type Error = string | undefined;
 
@@ -24,18 +25,19 @@ export type FormProp = {
 
 export type SubscribeCallback = (args: FormProp) => void;
 
-export type GetFieldsStackFilterFn = (name: string) => boolean;
+export type GetFieldsStackFilterFn = (field: Field) => boolean;
 
 export type API = {
   fields: IndexObject<ReactNode>;
   getFieldsStack: (filter?: GetFieldsStackFilterFn) => ReactNode[];
-  submitForm: () => void;
+  submitForm: (args?: IndexObject) => void;
   resetForm: () => void;
   focusField: (name: string) => void;
   subscribe: (cb: SubscribeCallback) => void;
   getValues: () => IndexObject;
   getErrors: () => IndexObject;
   getIsValid: () => boolean;
+  setValue: (name: string, value: any) => void;
 };
 
 export type TransformFn = (value: any) => any;
