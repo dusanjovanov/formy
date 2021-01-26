@@ -11,7 +11,6 @@ import {
 } from './types';
 import React from 'react';
 import { isFunction } from './utils';
-import { IForm } from '.';
 
 type Props = {
   children: (args: API) => any;
@@ -33,7 +32,7 @@ export class Form extends Component<Props> {
     this.renderedFields = this.createRenderedFields();
     this.initFields();
   }
-  form: IForm;
+  form: any;
   renderedFields: IndexObject<ReactNode>;
 
   componentDidUpdate(prevProps: Props) {
