@@ -38,6 +38,7 @@ export type API = {
   getErrors: () => IndexObject;
   getIsValid: () => boolean;
   setValue: (name: string, value: any) => void;
+  getFieldsArray: () => Field[];
 };
 
 export type TransformFn = (value: any) => any;

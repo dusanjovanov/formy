@@ -181,6 +181,10 @@ export class Form extends Component<Props> {
     this.subscribers.forEach((s) => s(this.createFormProp()));
   };
 
+  getFieldsArray = () => {
+    return this.getFieldsEntries().map(([_, field]) => field);
+  };
+
   createFormAPI = (): API => {
     return {
       fields: this.renderedFields,
@@ -193,6 +197,7 @@ export class Form extends Component<Props> {
       getErrors: this.getErrors,
       getIsValid: this.isValid,
       setValue: this.setValue,
+      getFieldsArray: this.getFieldsArray,
     };
   };
 
