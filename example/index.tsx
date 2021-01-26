@@ -78,7 +78,7 @@ class PersonForm {
       value ? value.toISOString() : null;
   };
 
-  update = (context, form, reason) => {
+  update = (context, reason) => {
     this.firstName.props = {
       label: 'First name',
     };

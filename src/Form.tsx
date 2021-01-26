@@ -39,7 +39,6 @@ export class Form extends Component<Props> {
     if (prevProps.context !== this.props.context) {
       this.form.update(
         this.props.context,
-        this.createFormProp(),
         this.createReason('context', 'context')
       );
     }
@@ -139,11 +138,7 @@ export class Form extends Component<Props> {
 
   componentDidMount() {
     this.form.init(this.props.context);
-    this.form.update(
-      this.props.context,
-      this.createFormProp(),
-      this.createReason('mount', 'mount')
-    );
+    this.form.update(this.props.context, this.createReason('mount', 'mount'));
   }
 
   createFormProp = (): FormProp => {
@@ -172,11 +167,7 @@ export class Form extends Component<Props> {
   });
 
   broadcast = (name: string, updateType: UpdateType) => {
-    this.form.update(
-      this.props.context,
-      this.createFormProp(),
-      this.createReason(name, updateType)
-    );
+    this.form.update(this.props.context, this.createReason(name, updateType));
     this.subscribers.forEach((s) => s(this.createFormProp()));
   };
 
