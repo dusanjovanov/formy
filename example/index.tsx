@@ -8,6 +8,7 @@ import { useEffect } from 'react';
 import { useRef } from 'react';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { ModalExample } from './ModalExample';
 
 const TextField = ({ label, isVisible, field, background }) => {
   if (typeof isVisible === 'boolean' && !isVisible) return null;
@@ -173,6 +174,7 @@ const App = () => {
           );
         }}
       </Form>
+      <ModalExample />
     </div>
   );
 };
