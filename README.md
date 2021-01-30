@@ -6,6 +6,7 @@ Blazing fast 🔥🚒🧯 Small 📦
 
 [![npm](https://badge.fury.io/js/%40formx%2Fformy.svg)](https://www.npmjs.com/package/@formx/formy)
 ![packagesize](https://badgen.net/bundlephobia/minzip/@formx/formy)
+![treeshaking](https://badgen.net/bundlephobia/tree-shaking/@formx/formy)
 
 ## Install
 
