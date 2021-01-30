@@ -2,7 +2,7 @@
 
 ![Formy](https://github.com/dusanjovanov/formy/blob/master/logo2.png 'Formy')
 
-Blazing fast 🔥🚒🧯
+Blazing fast 🔥🚒🧯 Small 📦
 
 [![npm](https://badge.fury.io/js/%40formx%2Fformy.svg)](https://www.npmjs.com/package/@formx/formy)
 ![packagesize](https://badgen.net/bundlephobia/minzip/@formx/formy)
