@@ -17,9 +17,9 @@ npm i @formx/formy
 ## Create your form class
 
 ```ts
-import { IForm, Field } from '@formx/formy';
+import { Field } from '@formx/formy';
 
-class PersonForm implements IForm {
+class PersonForm {
   firstName = Field(TextField);
   lastName = Field(TextField);
   fullName = Field(TextField);
@@ -33,7 +33,7 @@ class PersonForm implements IForm {
     this.firstName.schema = yup.string().required();
   };
 
-  update = (context, form, reason) => {
+  update = (context, reason) => {
     this.firstName.props = {
       label: 'First name',
     };
